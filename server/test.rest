@@ -1,0 +1,16 @@
+post http://localhost:3001/api/v1/register
+
+{"Content-Type: application/json"}
+
+{
+    avatar:"avatar1",
+    emailaddress:"emaivhhvhl5@gmail.com",
+    password:"password1bhggugugbu",
+    username :"username5hvhv",
+    bio:"bio1",
+    occupation:"occupation1",
+    about:"about1"
+}
+
+###
+get http://localhost:3001/api/v1/users
