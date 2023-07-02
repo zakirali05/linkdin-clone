@@ -1,6 +1,6 @@
 const Post = require("../models/postModel.js");
 const User = require("../models/userModel.js");
-
+const cloudinary = require("../utils/cloudinary.js");
 const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find();
@@ -45,7 +45,16 @@ const getUserPosts = async (req, res) => {
 const addPost = async (req, res) => {
   try {
     const { media, text } = req.body;
-    const newPost = new Post({ media, text });
+    const result = await cloudinary.uploader.upload(media, {
+      folder: "posts",
+    });
+    const newPost = new Post({
+      media: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+      text,
+    });
     const savedpost = await newPost.save();
     req.user.posts.push(savedpost);
     await req.user.save();

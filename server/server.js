@@ -6,6 +6,8 @@ require("dotenv").config();
 
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
+const messagesRoutes = require("./routes/messageRoutes.js");
+const conversationRoutes = require("./routes/conversationRoutes.js");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -15,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", postRoutes);
+app.use("/api/v1/conversation", conversationRoutes);
+app.use("/api/v1/messages", messagesRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -34,7 +38,7 @@ app.listen(process.env.PORT, () =>
 // request connection(DONE)
 // accept connection(DONE)
 // reject connection(DONE)
-// remove connection
+// remove connection(DONE)
 // get my  profile(DONE)
 // add post(DONE)
 // delete post(DONE)

@@ -2,7 +2,14 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   avatar: {
-    type: String,
+    public_id: {
+      type: String,
+      requierd: true,
+    },
+    url: {
+      type: String,
+      requierd: true,
+    },
   },
   emailaddress: {
     required: true,

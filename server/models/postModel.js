@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema({
   media: {
-    type: String,
+    public_id: {
+      type: String,
+      requierd: true,
+    },
+    url: {
+      type: String,
+      requierd: true,
+    },
   },
   text: {
     type: String,

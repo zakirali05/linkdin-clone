@@ -1,6 +1,7 @@
 const User = require("../models/userModel.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const cloudinary = require("../utils/cloudinary.js");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -34,8 +35,14 @@ const register = async (req, res) => {
   try {
     const { avatar, emailaddress, password, username, bio, occupation, about } =
       req.body;
+    const result = cloudinary.uploader.upload(avatar, {
+      folder: "avatars",
+    });
     const newUser = new User({
-      avatar,
+      avatar: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
       emailaddress,
       password: await bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
       username,
@@ -94,8 +101,14 @@ const editUser = async (req, res) => {
   try {
     const { avatar, emailaddress, password, username, bio, about, occupation } =
       req.body;
+    const result = await cloudinary.uploader.upload(avatar, {
+      folder: "avatars",
+    });
     const user = await User.findByIdAndUpdate(req.user._id, {
-      avatar,
+      avatar: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
       emailaddress,
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
       username,
