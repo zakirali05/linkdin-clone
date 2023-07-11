@@ -55,7 +55,9 @@ const register = async (req, res) => {
     const token = jwt.sign(savedUser.id, process.env.JWT_SECRET);
     res.cookie("token", token);
 
-    res.status(201).json({ savedUser, token });
+    res
+      .status(201)
+      .json({ savedUser, token, message: "User created succesfully" });
     return;
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -70,7 +72,7 @@ const login = async (req, res) => {
       if (await bcrypt.compareSync(password, user.password)) {
         const token = await jwt.sign(user.id, process.env.JWT_SECRET);
         res.cookie("token", token);
-        res.status(200).json({ user, token });
+        res.status(200).json({ user, token, message: "Logged in succesfully" });
         return;
       }
       res.status(500).json({ message: "Invalid credentials" });
@@ -125,7 +127,12 @@ const editUser = async (req, res) => {
 
 const myProfile = async (req, res) => {
   try {
-    res.status(200).json({ user: req.user });
+    const user = await User.findById(req.user._id);
+    if (user) {
+      return res.status(200).json({ user: req.user });
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -134,8 +141,12 @@ const myProfile = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    await User.deleteOne(user);
-    res.status(200).json({ message: "Your account has been deleted" });
+    if (user) {
+      await User.deleteOne(user);
+      res.status(200).json({ message: "Your account has been deleted" });
+    } else {
+      res.status(404).json({ message: "Your account not found" });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
